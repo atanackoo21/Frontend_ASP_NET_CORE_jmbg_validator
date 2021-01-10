@@ -1,0 +1,144 @@
+﻿@model Person
+@{
+    ViewData["Title"] = "Home Page";
+}
+<head>
+    <link rel="stylesheet" type="text/css" href="././css/Index.css" />
+</head>
+
+
+<div class="text-center">
+    <form asp-controller="HomeController">
+        <div class="form-group row">
+            <div class=" col-2 labels">
+                <label > JMBG </label>
+            </div>
+            <div class=" col-4">
+                <input type="text" id="add-jmbg" placeholder="Jmbg" class="form-control" />
+                <span id="error-message" style="color:darkred"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class=" col-2 labels">
+                <label style="margin-top:5pt;"> First name </label>
+            </div>
+            <div class=" col-4">
+                <input type="text" id="add-first-name" placeholder="First name" class="form-control" />
+                <span id="error-message" style="color:darkred"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class=" col-2 labels">
+                <label style="margin-top:5pt;"> Last name </label>
+            </div>
+            <div class=" col-4">
+                <input type="text" id="add-last-name" placeholder="Last name" class="form-control" />
+                <span id="error-message" style="color:darkred"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-2 offset-3">
+                <input class="btn btn-danger" type="button" onclick="getJmbgInfoUsingAjax()" value="Check jmbg" />
+            </div>
+        </div>
+    </form>
+</div>
+<div id="overlay"></div>
+
+<div class="form-popup" id="infoForm">
+    <form style="max-width:190pt; max-height: 80%">
+        <div class="form-group container col-7" style="margin-left:10pt;">
+            <div class=" form-elements">
+
+                <h2> Information </h2>
+
+                <label for="first-name" class="label-form"> First name </label>
+                <input type="text" name="first-name" id="first-name" disabled />
+
+                <label for="last-name" class="label-form"> Last name </label>
+                <input type="text" name="last-name" id="last-name" disabled />
+
+                <label for="day"> Day </label>
+                <input type="text" name="day" id="day" disabled />
+
+                <label for="month" class="label-form"> Month </label>
+                <input type="text" name="month" id="month" disabled />
+
+                <label for="year" class="label-form"> Year </label>
+                <input type="text" name="year" id="year" disabled />
+
+                <label for="region" class="label-form"> Region </label>
+                <input type="text" name="region" id="region" disabled />
+
+                <label for="gender" class="label-form"> Gender </label>
+                <input type="text" name="gender" id="gender" disabled />
+
+                <button style="margin-left:35pt; margin-top:5pt;" class="btn btn-info" onclick="closeForm()">  Close </button>
+            </div>
+
+        </div>
+    </form>
+
+</div>
+
+
+@section scripts{
+    <script type="text/javascript">
+
+        function closeForm() {
+            document.getElementById("myForm").style.display = "none";
+        }
+
+        function getJmbgInfoUsingAjax() {
+            const jmbg = document.getElementById('add-jmbg');
+            const item = {
+                isComplete: false,
+                name: jmbg.value.trim()
+            };
+
+            if (item.name.length != 13) {
+                var errormsg = document.getElementById("error-message");
+                errormsg.innerHTML = "Invalid number of characters!";
+            } else {
+                $.ajax({
+                    url: '@Url.Action("GetJmbgInfo")',
+                    type: "POST",
+                    data: { jmbg: item.name },
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response.includes("Invalid")) {
+                            alert(response);
+                        } else {
+
+                            var data = JSON.parse(response);
+
+                            document.getElementById('first-name').value = document.getElementById('add-first-name').value;
+                            document.getElementById('last-name').value = document.getElementById('add-last-name').value;;
+                            document.getElementById('day').value = data.day;
+                            document.getElementById('month').value = data.month;
+                            document.getElementById('year').value = data.year;
+                            document.getElementById('region').value = data.region;
+                            document.getElementById('gender').value = data.gender;
+
+                            document.getElementById("infoForm").style.display = "block";
+
+                            document.getElementById("overlay").style.visibility = "visible";
+
+                            if (response.length === 0) {
+                                alert("Response not come!");
+                                }
+                            }
+
+                    },
+                    failure: function (response) {
+                        alert(response);
+                    }
+                });
+            }
+
+        }
+
+    </script>
+
+}

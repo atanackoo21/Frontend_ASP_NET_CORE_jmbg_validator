@@ -1,0 +1,39 @@
+﻿body {
+}
+
+.form-popup {
+    top: 38%;
+    display: none;
+    position: fixed;
+    border: 3px solid #f1f1f1;
+    background-color: ghostwhite;
+    left: 50%;
+    position: absolute;
+    -webkit-transform: translate3d(-60%, -40%, 0);
+    -moz-transform: translate3d(-60%, -40%, 0);
+    transform: translate3d(-60%, -40%, 0);
+}
+
+.form-elements{
+    text-align:left;
+}
+
+.labels {
+    margin-top: 5pt;
+    text-align: right;
+    display: inline-block;
+}
+
+input{
+    margin-bottom:10px;
+}
+
+#overlay{
+    position: fixed;
+    top: 0; 
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.5);
+    visibility:hidden;
+}
